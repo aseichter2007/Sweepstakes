@@ -41,7 +41,7 @@ namespace Sweepstakes
             { 
                 smtpClient.ServerCertificateValidationCallback = (s, c, h, e) => true;
 
-                await smtpClient.ConnectAsync("smtp-mail.outlook.com", 587, MailKit.Security.SecureSocketOptions.Auto);
+                await smtpClient.ConnectAsync("smtp-mail.outlook.com", 587, MailKit.Security.SecureSocketOptions.StartTls);
                 await smtpClient.AuthenticateAsync(company[1], company[2]);
                 await smtpClient.SendAsync(message);
                 await smtpClient.DisconnectAsync(true);

@@ -6,11 +6,17 @@ namespace Sweepstakes
 {
     class SweepstakesQueueManager : ISweepstakesManager
     {
-        Queue<SweepStakes> sweepStakes;
-
+        private Queue<SweepStakes> sweepStakes;
+        
         public SweepstakesQueueManager()
         {
             sweepStakes = new Queue<SweepStakes>();
+        }
+
+        public int Getcount()
+        {
+            return sweepStakes.Count;
+
         }
 
         public SweepStakes GetSweepStakes()

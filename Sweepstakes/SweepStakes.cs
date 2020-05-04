@@ -29,7 +29,7 @@ namespace Sweepstakes
             {
                 UserInterface.DisplayOnly("register contestants for "+ name);
                 CreateContestant();
-                UserInterface.DisplayInline("would you like to add another contestant in "+name + "?");
+                takenames =UserInterface.GetInputInline("would you like to add another contestant in "+name + "?");
             } while (takenames!="no");
         }
         public void ContinueAddContestants()
@@ -39,8 +39,8 @@ namespace Sweepstakes
             {
                 UserInterface.DisplayOnly("register contestants for " + name);
                 CreateContestant();
-                UserInterface.DisplayInline("would you like to add another contestant in " + name + "?");
-            } while (takenames != "no");
+               takenames= UserInterface.GetInputInline("would you like to add another contestant in " + name + "?");
+            } while (takenames.Trim() != "no"&& takenames.Trim() != "n");
         }
     
         public void CreateContestant()
@@ -82,7 +82,7 @@ namespace Sweepstakes
         }
         public void PrintContestantInfo(Contestant contestant)
         {
-            UserInterface.DisplayOnly(contestant.firstName);
+            UserInterface.DisplayInline(contestant.firstName);
             UserInterface.DisplayInline(contestant.lastName);
             UserInterface.DisplayInline(contestant.email);
             UserInterface.DisplayInline(contestant.registrationNumber);           

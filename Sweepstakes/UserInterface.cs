@@ -68,7 +68,7 @@ namespace Sweepstakes
                     dotseqence = 0;
                 }
             }
-            if (at==1 &&space==0&&!dot)
+            if (at==1 &&space==0&&dot)
             {
                 output = true;
             }
@@ -79,12 +79,12 @@ namespace Sweepstakes
             Console.WriteLine(output);
             string email = Console.ReadLine();
             output = "remember, an email can not have spaces, multiple @ symbols, or a sequence of dots ex:'john..doe @' Please try again";
-            do
+            while (!EmailCheck(email))
             {
                 Console.WriteLine(output);
                 output = "invalid email, please try again";
                 email = Console.ReadLine();
-            } while (!EmailCheck(email));
+            }
             return email;           
         }
 

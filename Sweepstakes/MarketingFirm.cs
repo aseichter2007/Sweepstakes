@@ -22,11 +22,15 @@ namespace Sweepstakes
             do
             {
                 bool baduser = true;
-                UserInterface.DisplayOnly("Welcome to the " + name + "Sweepstakes management portal");
+                UserInterface.DisplayOnly("Welcome to the " + name + " Sweepstakes management portal");
                 UserInterface.DisplayInline("Here you can create and manage sweepstakes.");
                 UserInterface.DisplayInline("1.Create a new sweepstakes.");
-                UserInterface.DisplayInline("2.Work on a previous sweepstake");
-                UserInterface.DisplayInline("3.Finalize and choose winner of next sweepstake");
+                if (sweepstakescolleciton.Getcount()>0)
+                {
+                    UserInterface.DisplayInline("2.Work on a previous sweepstake");
+                    UserInterface.DisplayInline("3.Finalize and choose winner of next sweepstake");
+                }
+           
                 do
                 {
                     string input = UserInterface.GetInputInline("Enter choice.");
@@ -39,24 +43,39 @@ namespace Sweepstakes
         private bool RunSweepstakesInput(string input)
         {
             bool output = true;
-            switch (input.Trim())
+            if (sweepstakescolleciton.Getcount() > 0)
             {
-                case "1":
-                case "create":
-                    CreateSweepstakes();
-                    output = false;
-                    break;
-                case "2":
-                case "work:":
-                    output = false;
-                    WorkOnColleciton();
-                    break;
-                case "3":
-                case "finalize":
-                    ChooseWinner();
-                    output = false;
-                    break;
+                switch (input.Trim())
+                {
+                    case "1":
+                    case "create":
+                        CreateSweepstakes();
+                        output = false;
+                        break;
+                    case "2":
+                    case "work:":
+                        output = false;
+                        WorkOnColleciton();
+                        break;
+                    case "3":
+                    case "finalize":
+                        ChooseWinner();
+                        output = false;
+                        break;
+                }
             }
+            else
+            {
+                switch (input.Trim())
+                {
+                    case "1":
+                    case "create":
+                        CreateSweepstakes();
+                        output = false;
+                        break;
+                }
+            }
+            
             return output;
         }
         private void WorkOnColleciton()
@@ -127,7 +146,7 @@ namespace Sweepstakes
                     message = "Invalid handler, please try again. Stack or queue, s/q";
                 }
                                 
-                UserInterface.GetInputInline(message);
+                UserInterface.DisplayInline(message);
                 correctinput = ChooseHandler(Console.ReadLine());
             } while (!correctinput);
             UserInterface.Clear();

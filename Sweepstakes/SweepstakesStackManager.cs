@@ -7,6 +7,15 @@ namespace Sweepstakes
     class SweepstakesStackManager:ISweepstakesManager
     {
         Stack<SweepStakes> sweepStakes;
+        public SweepstakesStackManager()
+        {
+            sweepStakes = new Stack<SweepStakes>();
+        }
+
+        public int Getcount()
+        {
+            return sweepStakes.Count;
+        }
 
         public SweepStakes GetSweepStakes()
         {

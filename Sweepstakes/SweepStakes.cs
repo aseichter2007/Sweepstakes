@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using System.Text;
@@ -6,7 +7,7 @@ using System.Transactions;
 
 namespace Sweepstakes
 {
-    class SweepStakes
+    class SweepStakes:IEnumerable
     {
         Dictionary<string, Contestant> contestants;
         private int count;
@@ -17,6 +18,7 @@ namespace Sweepstakes
         {
             contestants = new Dictionary<string, Contestant>();
             random = new Random();
+            count = 1;
             Sweepstakes(name);
         }
 
@@ -30,7 +32,7 @@ namespace Sweepstakes
                 UserInterface.DisplayOnly("register contestants for "+ name);
                 CreateContestant();
                 takenames =UserInterface.GetInputInline("would you like to add another contestant in "+name + "?");
-            } while (takenames!="no");
+            } while (takenames.Trim().ToLower()!="no"&& takenames.Trim().ToLower() != "n");
         }
         public void ContinueAddContestants()
         {
@@ -54,7 +56,7 @@ namespace Sweepstakes
                    UserInterface.GetInputInline("enter contestant last name."),
                    UserInterface.GetEmail("enter contestant email"),
                    count.ToString());
-
+                UserInterface.Clear();
                 PrintContestantInfo(newContestant);
                 response = UserInterface.GetInputInline("is this information correct?");
             } while (response.ToLower() != "y" && response.ToLower() != "yes");
@@ -80,17 +82,25 @@ namespace Sweepstakes
             }
             return winner;
         }
-        public void PrintContestantInfo(Contestant contestant)
+        public Contestant  PrintContestantInfo(Contestant contestant)
         {
             UserInterface.DisplayInline(contestant.firstName);
             UserInterface.DisplayInline(contestant.lastName);
             UserInterface.DisplayInline(contestant.email);
-            UserInterface.DisplayInline(contestant.registrationNumber);           
+            UserInterface.DisplayInline(contestant.registrationNumber);
+            return contestant;
         }
-        public void ChooseAndDisplayWinnerInfo()
+        public Contestant ChooseAndDisplayWinnerInfo()
         {
-            PrintContestantInfo(PickWinner());
+           return  PrintContestantInfo(PickWinner());
         }
 
+        public IEnumerator GetEnumerator()
+        {
+            foreach (Contestant contestant in contestants.Values)
+            {            
+                yield return contestant;
+            }
+        }
     }
 }

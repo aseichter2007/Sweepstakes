@@ -3,19 +3,46 @@ using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading;
+using System.Transactions;
 
-namespace Sweepstakes
+namespace Sweepstakes 
 {
     class MarketingFirm
     {
         ISweepstakesManager sweepstakescolleciton;
         string name;
+        string[] company;
+        bool emailflag = false;
         //creates sweepstakes
         public MarketingFirm()
         {
+            company = new string[3];
             this.name = NameCompany();
+            emailflag=ConfigEmail();
             SetupHandler();
             Runsweepstakes();
+        }
+        private bool ConfigEmail()
+        {
+            bool output = false;
+            string input =UserInterface.GetinputClear("Will your company send emails to all contestants?");
+            if (input.Trim() == "y" || input.Trim() == "yes")
+            {
+                string badinput = "";
+                do
+                {
+                    output = true;
+                    company[0] = name;
+                    company[1] = UserInterface.GetEmail("Enter the address the microsoft outlook email address your company sends email from.");
+                    company[2] = UserInterface.GetInputInline("enter the password associated with this acocunt.  Get it right, you only have this one chance to set it.");
+                    UserInterface.DisplayInline("");
+                    UserInterface.DisplayInline(company[0]);
+                    UserInterface.DisplayInline(company[1]);
+                    UserInterface.DisplayInline(company[2]);
+                    badinput = UserInterface.GetInputInline("are these values correct?");
+                  } while (badinput.Trim().ToLower() !="y" && badinput.Trim().ToLower() != "yes");
+            }
+            return output;
         }
         private void Runsweepstakes()
         {
@@ -96,7 +123,7 @@ namespace Sweepstakes
         {
             SweepStakes working = sweepstakescolleciton.GetSweepStakes();
             UserInterface.DisplayOnly("the winner of " + working.name + "is:");
-            working.ChooseAndDisplayWinnerInfo();
+            Contestant winner = working.ChooseAndDisplayWinnerInfo();
             string input = UserInterface.GetInputInline("Would you like to return this sweepstakes to the queue or stack?");
             if (input.Trim().ToLower()=="y"||input.Trim().ToLower()=="yes")
             {
@@ -107,8 +134,21 @@ namespace Sweepstakes
             {
                 UserInterface.DisplayInline("I hope you were done with it, that sweepstakes is gone forever.");
             }
+            MailNotify(working, winner);
 
         }
+        private void MailNotify(SweepStakes sweepstakes,Contestant winner)
+        {
+            if (emailflag)
+            {
+                foreach (Contestant loser in sweepstakes)
+                {
+                    loser.Notify(company, winner.firstName + " has won " +sweepstakes.name);
+                }
+                winner.Notify(company, "You have won " + sweepstakes.name + "Contact us to claim your prize.");
+            }
+        }
+        
 
         private void CreateSweepstakes()
         {

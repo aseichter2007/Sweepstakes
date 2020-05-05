@@ -8,7 +8,7 @@ using System.Transactions;
 
 namespace Sweepstakes 
 {
-    class MarketingFirm
+    class MarketingFirm//:INotification //this class needed all different inputs, and while I probably could have fixed it up nice, I decided it was kind of useless here. 
     {
         ISweepstakesManager sweepstakescolleciton;
         string name;
@@ -148,7 +148,10 @@ namespace Sweepstakes
 
                 foreach (Contestant loser in sweepstakes)
                 {
-                    loser.Notify(company, winner.firstName + " has won " +sweepstakes.name,smtpClient);
+                    if (loser.email!=winner.email)
+                    {
+                        loser.Notify(company, winner.firstName + " has won " + sweepstakes.name, smtpClient);
+                    }
                 }
                 winner.Notify(company, "You have won " + sweepstakes.name + "Contact us to claim your prize.",smtpClient);
                 smtpClient.Disconnect(true);

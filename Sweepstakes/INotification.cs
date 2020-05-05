@@ -7,6 +7,7 @@ namespace Sweepstakes
 {
     interface INotification
     {
+        
         public void Notify(string[] company, string body,SmtpClient smtpClient);
     }
 }

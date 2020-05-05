@@ -24,7 +24,7 @@ namespace Sweepstakes
             this.registrationNumber = registrationNumber;
         }
 
-        public void Notify(string[] company, string body)
+        public void Notify(string[] company, string body, SmtpClient smtpClient)
         {
            
             MimeMessage message = new MimeMessage()
@@ -35,17 +35,9 @@ namespace Sweepstakes
             };
             message.To.Add(new MailboxAddress(email));
 
-            SmtpClient smtpClient = new MailKit.Net.Smtp.SmtpClient();
-
-            smtpClient.MessageSent += async (sender, args) =>
-            { 
-                smtpClient.ServerCertificateValidationCallback = (s, c, h, e) => true;
-
-                await smtpClient.ConnectAsync("smtp-mail.outlook.com", 587, MailKit.Security.SecureSocketOptions.StartTls);
-                await smtpClient.AuthenticateAsync(company[1], company[2]);
-                await smtpClient.SendAsync(message);
-                await smtpClient.DisconnectAsync(true);
-            };
+            
+            smtpClient.Send(message);
+            UserInterface.DisplayInline("Message was sent to " + email);
             
         }
     }

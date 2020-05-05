@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MailKit.Net.Smtp;
+using System;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using System.Text;
@@ -33,8 +34,8 @@ namespace Sweepstakes
                 {
                     output = true;
                     company[0] = name;
-                    company[1] = UserInterface.GetEmail("Enter the address the microsoft outlook email address your company sends email from.");
-                    company[2] = UserInterface.GetInputInline("enter the password associated with this acocunt.  Get it right, you only have this one chance to set it.");
+                    company[1] = UserInterface.GetEmail("Enter the address the gmail address your company sends email from. This account must have less secure application acess enabled.");
+                    company[2] = UserInterface.GetInputInline("enter the password associated with this acocunt.  Get it right, or you will be mad later.");
                     UserInterface.DisplayInline("");
                     UserInterface.DisplayInline(company[0]);
                     UserInterface.DisplayInline(company[1]);
@@ -128,11 +129,11 @@ namespace Sweepstakes
             if (input.Trim().ToLower()=="y"||input.Trim().ToLower()=="yes")
             {
                 sweepstakescolleciton.insertSweepstakes(working);
-                UserInterface.DisplayInline("Sweepstakes returned, good luck with the duplicate winner");
+                UserInterface.GetInputInline("Sweepstakes returned, good luck with the duplicate winner.  Enter to continue.");
             }
             else
             {
-                UserInterface.DisplayInline("I hope you were done with it, that sweepstakes is gone forever.");
+                UserInterface.GetInputInline("I hope you were done with it, that sweepstakes is gone forever. Enter to continue.");
             }
             MailNotify(working, winner);
 
@@ -141,11 +142,17 @@ namespace Sweepstakes
         {
             if (emailflag)
             {
+                SmtpClient smtpClient = new MailKit.Net.Smtp.SmtpClient();
+                smtpClient.Connect("smtp.gmail.com", 587, MailKit.Security.SecureSocketOptions.Auto);
+                smtpClient.Authenticate(company[1], company[2]);
+
                 foreach (Contestant loser in sweepstakes)
                 {
-                    loser.Notify(company, winner.firstName + " has won " +sweepstakes.name);
+                    loser.Notify(company, winner.firstName + " has won " +sweepstakes.name,smtpClient);
                 }
-                winner.Notify(company, "You have won " + sweepstakes.name + "Contact us to claim your prize.");
+                winner.Notify(company, "You have won " + sweepstakes.name + "Contact us to claim your prize.",smtpClient);
+                smtpClient.Disconnect(true);
+
             }
         }
         

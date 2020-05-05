@@ -153,7 +153,7 @@ namespace Sweepstakes
                         loser.Notify(company, winner.firstName + " has won " + sweepstakes.name, smtpClient);
                     }
                 }
-                winner.Notify(company, "You have won " + sweepstakes.name + "Contact us to claim your prize.",smtpClient);
+                winner.Notify(company, "You have won " + sweepstakes.name + ", Contact us to claim your prize.",smtpClient);
                 smtpClient.Disconnect(true);
 
             }
